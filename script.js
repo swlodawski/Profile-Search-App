@@ -25,6 +25,35 @@ const userGetFunction = (name) => {
     });
 }
 
-const getRepoFunction = () => {
-    
+const getRepoFunction = (name) => {
+    axios(api + name + '/repos?sort=created')
+    .then((response) => {
+        repoCardFunction(response.data);
+    }).catch((err) => {
+        errorFunction("Could not fetch repo");
+    });
 }
+
+const userCard = (user) => {
+    let id = user.name || user.login;
+    let info = user.bio ? `<p>${user.bio}</p>` : "";
+    let cardElement = 
+    <div class="card">
+        <div>
+            <img src="${user.avatar_url}" 
+            alt="{user.name}"
+            class="{}avatar"></img>
+        </div>
+
+        <div class="user-info">
+            <h2>${id}</h2>${info}<ul>
+                <li>${user.followers}<strong>Following</strong></li>
+                <li>${user.following}<strong>Following</strong></li>
+                <li>${user.public_repos}<strong>Repos</strong></li>
+            </ul>
+            <div id="repos"></div>
+        </div>
+    </div>;
+    main.innerHTML = cardElement
+}
+
